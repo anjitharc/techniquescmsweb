@@ -25,6 +25,8 @@ export default function CmplntFetch({ onSendData , onClose}) {
   const [loading, setLoading] = useState(false);
   const [loadingfetch, setLoadingfetch] = useState(false);
   const [crfnumber, setCrfnumber] = useState(false);
+  const [message, setMessage] = useState('');
+
 
   // Fetching Data From API
 
@@ -40,26 +42,33 @@ export default function CmplntFetch({ onSendData , onClose}) {
   }
 
   useEffect(() => {
-    const fetchbtn = async () => {
-      
-      const response = await fetchfunctn({
-        custName,
-        address
-      })
-        .then((response) => {
-          custsearchchange(response.data);
-          totalrecordschange(response.count);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    };
 
-    fetchbtn();
-  }, [address]);
+    if(custName.length >= 3){
+      const fetchbtn = async () => {
+      
+        const response = await fetchfunctn({
+          custName,
+          address
+        })
+          .then((response) => {
+            custsearchchange(response.data);
+            totalrecordschange(response.count);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      };
+    
+      fetchbtn();
+
+      setMessage("");
+    }else{
+   setMessage("Please input min 3 characters");
+  }
+  }, [address , custName]);
 
   const handleSelect = (crfid , custid) => (e) => {
     setCrfnumber(crfid);
@@ -74,7 +83,8 @@ export default function CmplntFetch({ onSendData , onClose}) {
           <div className="col-md-4 mb-4 pb-2">
             <div className="form-outline">
               <label>SEARCH : ( Name / CRF Number ) </label>
-              <input required onChange={(e) => custNamechange(e.target.value)} className="form-control form-control-md"></input>
+              <input required onChange={(e) => custNamechange(e.target.value)}  className="form-control form-control-md"></input>
+              {message && <p>{message}</p>}
             </div>
           </div>
           <div className="col-md-4 mb-4 pb-2">

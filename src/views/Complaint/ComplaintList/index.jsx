@@ -82,6 +82,7 @@ export default function ComplaintList() {
   const [closedStaffId, staffIdchange] = useState();
   const [assignedStaffId, setstaffid] = useState(null);
   const [staffId, setassignedStaffId] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   //Modal Complaint Close
   const [show, setShow] = useState(false);
@@ -101,6 +102,17 @@ export default function ComplaintList() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  //Current Time   
+  
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 1000); // Update every second
+  
+      return () => clearInterval(intervalId); // Cleanup on unmount
+    }, []);
+  
 
 
   //Complaint List Api
@@ -310,7 +322,7 @@ export default function ComplaintList() {
                 <StyledTableCell align="left">Address</StyledTableCell>
                 <StyledTableCell align="left">Category</StyledTableCell>
                 <StyledTableCell align="left">Staff</StyledTableCell>
-                <StyledTableCell align="right">Time</StyledTableCell>
+                <StyledTableCell align="right">Duration</StyledTableCell>
                 <StyledTableCell align="center">Action</StyledTableCell>
               </TableRow>
             </TableHead>          
@@ -330,7 +342,7 @@ export default function ComplaintList() {
                     <StyledTableCell align="left">{row.address}</StyledTableCell>
                     <StyledTableCell align="left">{row.category}</StyledTableCell>
                     <StyledTableCell align="left">{row.assignedStaffName}</StyledTableCell>
-                    <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                    <StyledTableCell align="right">{-row.duration}</StyledTableCell>
                     <StyledTableCell align="left">
                       <div style={{ display: 'flex' }}>
                         <Button size="small" variant="contained" color="secondary" onClick={handleShowCmp(row.id)}>
